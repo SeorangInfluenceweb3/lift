@@ -1,0 +1,19 @@
+{
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "https://liftdata.ai", 
+      "permanent": true
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/zealychecker",
+      "destination": "/zealychecker/index.html"
+    },
+    {
+      "source": "/zealychecker/:path*",
+      "destination": "/zealychecker/:path*"
+    }
+  ]
+}

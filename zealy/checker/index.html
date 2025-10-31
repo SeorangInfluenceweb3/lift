@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LIFT - Airdrop Zealy Checker</title>
+  <link href="https://cdn.prod.website-files.com/68298c915e374f01d8970463/css/lift-prev-2.webflow.shared.d695c7625.css" rel="stylesheet" type="text/css">
+  <link rel="icon" type="image/png" href="https://cdn.prod.website-files.com/68298c915e374f01d8970463/68298f95315fe0e5d78738fb_Favicon.png">
+  <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+  <header class="navbar">
+    <img src="https://cdn.prod.website-files.com/68298c915e374f01d8970463/6829905039ea6ea598784403_lift%20logo.png" alt="LIFT Logo">
+    <a href="https://machines.liftdata.ai/dashboard" class="btn-nav">AI Machines APP</a>
+  </header>
+
+  <section class="hero">
+    <div class="hero-content">
+      <h1>Airdrop Zealy Checker Is LIVE!</h1>
+      <p>
+        Instantly check your $LIFT allocation! Click <b>Claim Token</b> to open your 
+        <b>OKX Wallet</b> and follow the instructions to add <b>$LIFT Token</b>. 
+        Ensure you’re using the same wallet linked to your <b>Zealy</b> account.
+      </p>
+      
+      <!-- Modern Wallet Checker Form -->
+      <form class="checker-form-modern" onsubmit="checkAirdrop(event)">
+        <input type="text" class="checker-input-modern" placeholder="Enter your wallet address" required autocomplete="off">
+        <button type="submit" class="checker-btn-modern">Check Allocation</button>
+      </form>
+
+      <div id="checker-result" class="checker-result-modern"></div>
+      <div class="buttons" id="extra-buttons" style="margin-top:36px;"></div>
+    </div>
+  </section>
+
+  <script>
+    // Generate a consistent hash between 500 - 10000 for each wallet
+    function hashWalletToNumber(wallet) {
+      let hash = 0;
+      for (let i = 0; i < wallet.length; i++) {
+        hash = wallet.charCodeAt(i) + ((hash << 5) - hash);
+        hash = hash & hash;
+      }
+      const min = 500;
+      const max = 10000;
+      return Math.abs(hash % (max - min + 1)) + min;
+    }
+
+    function checkAirdrop(e) {
+      e.preventDefault();
+      const input = document.querySelector('.checker-input-modern').value.trim();
+      const resultDiv = document.getElementById('checker-result');
+      const extraButtons = document.getElementById('extra-buttons');
+
+      if(!/^0x[a-fA-F0-9]{40}$/.test(input)) {
+        resultDiv.innerHTML = '<span style="color:#FF5959;">Invalid wallet address!</span>';
+        return;
+      }
+
+      const amount = hashWalletToNumber(input);
+      resultDiv.innerHTML = `<span style="color:#21ff89;">Congratulations! Wallet <b>${input.slice(0,8)}...${input.slice(-6)}</b> is eligible for <b>${amount.toLocaleString()} $LIFT</b> tokens.</span>`;
+
+      // Create Claim Token button if not already present
+      if (!document.getElementById('claim-btn')) {
+        const claimBtn = document.createElement('a');
+        claimBtn.id = 'claim-btn';
+        claimBtn.href = 'https://www.okx.com/web3';
+        claimBtn.target = '_blank';
+        claimBtn.className = 'btn-primary';
+        claimBtn.textContent = 'Claim Token';
+        claimBtn.style.marginTop = '20px';
+        extraButtons.appendChild(claimBtn);
+      }
+    }
+  </script>
+</body>
+</html>
